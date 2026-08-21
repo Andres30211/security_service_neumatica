@@ -44,29 +44,41 @@ public class AuthService {
 
 	public AuthResponse register(RegisterRequest request) {
 
-        if (this.userRepository.existsByEmail(request.email())) {
+	    if (this.userRepository.existsByEmail(request.email())) {
+	        throw new RuntimeException("El usuario ya existe");
+	    }
 
-            throw new RuntimeException("El usuario ya existe");
-        }
+	    RoleName roleName;
 
-        Role userRole = this.roleRepository
-                .findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("ROLE_USER no existe"));
+	    // El primer usuario será ADMIN
+	    if (this.userRepository.count() == 0) {
+	        roleName = RoleName.ROLE_ADMIN;
+	    } else {
+	        roleName = RoleName.ROLE_USER;
+	    }
 
-        User user = User.builder()
-                .name(request.name())
-                .email(request.email())
-                .password(this.passwordEncoder.encode(request.password()))
-                .enabled(true)
-                .accountNonLocked(true)
-                .build();
+	    Role userRole = this.roleRepository
+	            .findByName(roleName)
+	            .orElseThrow(() ->
+	                    new RuntimeException(
+	                            roleName + " no existe"
+	                    )
+	            );
 
-        user.getRoles().add(userRole);
+	    User user = User.builder()
+	            .name(request.name())
+	            .email(request.email())
+	            .password(this.passwordEncoder.encode(request.password()))
+	            .enabled(true)
+	            .accountNonLocked(true)
+	            .build();
 
-        user = this.userRepository.save(user);
+	    user.getRoles().add(userRole);
 
-        return this.generateTokens(user);
-    }
+	    user = this.userRepository.save(user);
+
+	    return this.generateTokens(user);
+	}
 
     public AuthResponse login(LoginRequest request) {
 

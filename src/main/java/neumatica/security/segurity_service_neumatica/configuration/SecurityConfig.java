@@ -1,6 +1,8 @@
 package neumatica.security.segurity_service_neumatica.configuration;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,10 +11,10 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,9 @@ public class SecurityConfig {
 	
 	@Autowired
 	private CustomUserDetailsService userDetailsService;
+	
+	@Value("${app.jwt.secret}")
+    private String secret;
 
 	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,7 +51,7 @@ public class SecurityConfig {
                             "/api/auth/register",
                             "/api/auth/login",
                             "/api/auth/refresh",
-                            "/error"
+                            "/api/auth/despertar"
                     ).permitAll()
 
                     .requestMatchers(
@@ -57,11 +62,30 @@ public class SecurityConfig {
             )
 
             .oauth2ResourceServer(oauth2 ->
-                    oauth2.jwt(jwt -> {})
-            );
+	            oauth2.jwt(jwt -> {})
+	        );
 
         return http.build();
     }
+	
+	@Bean
+	public JwtAuthenticationConverter jwtAuthenticationConverter() {
+
+	    JwtGrantedAuthoritiesConverter authoritiesConverter =
+	            new JwtGrantedAuthoritiesConverter();
+
+	    authoritiesConverter.setAuthoritiesClaimName("roles");
+	    authoritiesConverter.setAuthorityPrefix("");
+
+	    JwtAuthenticationConverter converter =
+	            new JwtAuthenticationConverter();
+
+	    converter.setJwtGrantedAuthoritiesConverter(
+	            authoritiesConverter
+	    );
+
+	    return converter;
+	}
 
     @Bean
     public PasswordEncoder passwordEncoder() {

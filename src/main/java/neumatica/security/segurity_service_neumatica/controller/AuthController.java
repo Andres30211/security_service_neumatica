@@ -3,6 +3,7 @@ package neumatica.security.segurity_service_neumatica.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,11 @@ public class AuthController {
 
 	@Autowired
 	private AuthService authService;
+	
+	@GetMapping("/despertar")
+    public ResponseEntity<String> despertar() {
+        return ResponseEntity.ok("Servidor disponible...");
+    }
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(
@@ -36,7 +42,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
             @Valid @RequestBody LoginRequest request) {
-
+    	System.out.println(request.email());
         return ResponseEntity.ok(
         		this.authService.login(request)
         );
