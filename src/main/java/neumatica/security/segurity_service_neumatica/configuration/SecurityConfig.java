@@ -26,9 +26,6 @@ public class SecurityConfig {
 	
 	@Autowired
 	private CustomUserDetailsService userDetailsService;
-	
-	@Value("${app.jwt.secret}")
-    private String secret;
 
 	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -90,7 +87,7 @@ public class SecurityConfig {
 	            new JwtGrantedAuthoritiesConverter();
 
 	    authoritiesConverter.setAuthoritiesClaimName("roles");
-	    authoritiesConverter.setAuthorityPrefix("");
+	    authoritiesConverter.setAuthorityPrefix("ROLE_");
 
 	    JwtAuthenticationConverter converter =
 	            new JwtAuthenticationConverter();
