@@ -16,7 +16,7 @@ public class CorsConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:4200", "https://neumatica-crm.netlify.app/"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200", "https://neumatica-crm.netlify.app"));
 
         configuration.setAllowedMethods(
                 List.of(
@@ -28,9 +28,10 @@ public class CorsConfig {
                 )
         );
 
-        configuration.setAllowedHeaders(
-                List.of("*")
-        );
+        configuration.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type"
+        ));
 
         configuration.setAllowCredentials(true);
 
@@ -42,6 +43,6 @@ public class CorsConfig {
                 configuration
         );
 
-        return (CorsConfigurationSource) source;
+        return  source;
     }
 }
