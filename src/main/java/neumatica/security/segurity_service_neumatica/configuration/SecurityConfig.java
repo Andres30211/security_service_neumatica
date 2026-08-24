@@ -51,12 +51,12 @@ public class SecurityConfig {
                             "/api/auth/register",
                             "/api/auth/login",
                             "/api/auth/refresh",
-                            "/api/auth/despertar",
-                            "/api/users",
-                            "/api/users/**"
+                            "/api/auth/despertar"
                     ).permitAll()
 
                     .requestMatchers(
+                            "/api/users",
+                            "/api/users/**",
                             "/api/admin/**"
                     ).hasRole("ADMIN")
 
