@@ -52,7 +52,7 @@ public class SecurityConfig {
                             "/api/auth/login",
                             "/api/auth/refresh",
                             "/api/auth/despertar",
-                            "/api/users"
+                            "/api/users/**"
                     ).permitAll()
 
                     .requestMatchers(
