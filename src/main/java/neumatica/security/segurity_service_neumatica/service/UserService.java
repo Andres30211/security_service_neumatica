@@ -28,6 +28,8 @@ public class UserService {
 	@Autowired
 	private RoleRepository roleRepository;
 	
+	private UserResponse userResponse;
+	
 	
 	// =========================================
     // LISTAR
@@ -38,7 +40,7 @@ public class UserService {
 
         return userRepository.findAll()
                 .stream()
-                .map(this::toDTO)
+                .map(UserResponse::fromEntity)
                 .toList();
     }
 
@@ -57,7 +59,7 @@ public class UserService {
                         )
                 );
 
-        return toDTO(user);
+        return this.userResponse.fromEntity(user);
     }
 
 
@@ -79,7 +81,7 @@ public class UserService {
 
         User updatedUser = userRepository.save(user);
 
-        return toDTO(updatedUser);
+        return this.userResponse.fromEntity(updatedUser);
     }
 
 
@@ -103,7 +105,7 @@ public class UserService {
 
         User updatedUser = userRepository.save(user);
 
-        return toDTO(updatedUser);
+        return this.userResponse.fromEntity(updatedUser);
     }
 
 
@@ -127,7 +129,7 @@ public class UserService {
     // MAPPER
     // =========================================
 
-    private UserResponse toDTO(User user) {
+    /*private UserResponse toDTO(User user) {
 
         return new UserResponse(
                 user.getId(),
@@ -135,6 +137,6 @@ public class UserService {
                 user.getEmail(),
                 null
         );
-    }
+    }*/
 
 }

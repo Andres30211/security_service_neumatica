@@ -5,19 +5,16 @@ import java.util.UUID;
 
 import neumatica.security.segurity_service_neumatica.entity.User;
 
+
 public record UserResponse(
-		
-		UUID id,
-
+        UUID id,
         String name,
-
         String email,
+        Set<String> roles,
+        boolean enabled
+) {
 
-        Set<String> roles
-		
-		) {
-	
-	public static UserResponse fromEntity(User user) {
+    public static UserResponse fromEntity(User user) {
 
         return new UserResponse(
                 user.getId(),
@@ -26,8 +23,8 @@ public record UserResponse(
                 user.getRoles()
                         .stream()
                         .map(role -> role.getName().name())
-                        .collect(java.util.stream.Collectors.toSet())
+                        .collect(java.util.stream.Collectors.toSet()),
+                user.isEnabled()
         );
     }
-
 }
