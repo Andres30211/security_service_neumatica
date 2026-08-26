@@ -88,8 +88,39 @@ public class UserService {
     // =========================================
     // CAMBIAR ROL
     // =========================================
-
+    
     public UserResponse changeRole(UUID id, ChangeRoleRequest request) {
+
+        System.out.println("========== CHANGE ROLE ==========");
+        System.out.println("ID: " + id);
+        System.out.println("ROLE: " + request.role());
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Usuario no encontrado: " + id)
+                );
+
+        System.out.println("Usuario encontrado: " + user.getEmail());
+
+        Role role = roleRepository.findByName(request.role())
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Rol no encontrado: " + request.role()
+                        )
+                );
+
+        System.out.println("Rol encontrado: " + role.getName());
+
+        user.setRoles(Set.of(role));
+
+        User updatedUser = userRepository.save(user);
+
+        System.out.println("Usuario actualizado correctamente");
+
+        return this.userResponse.fromEntity(updatedUser);
+    }
+
+    /*public UserResponse changeRole(UUID id, ChangeRoleRequest request) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
@@ -106,7 +137,7 @@ public class UserService {
         User updatedUser = userRepository.save(user);
 
         return this.userResponse.fromEntity(updatedUser);
-    }
+    }*/
 
 
     // =========================================
