@@ -73,15 +73,11 @@ public class GlobalExceptionHandler {
             RuntimeException exception
     ) {
 
-        String message = exception.getMessage();
-
-        if (message == null || message.isBlank()) {
-            message = "Ha ocurrido un error inesperado";
-        }
+        exception.printStackTrace();
 
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                message
+                exception.getMessage()
         );
 
         return ResponseEntity

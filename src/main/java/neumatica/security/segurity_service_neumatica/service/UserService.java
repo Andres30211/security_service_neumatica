@@ -113,11 +113,17 @@ public class UserService {
 
         user.setRoles(Set.of(role));
 
+        System.out.println("Roles asignados al usuario");
+
         User updatedUser = userRepository.save(user);
 
-        System.out.println("Usuario actualizado correctamente");
+        System.out.println("Usuario guardado correctamente");
 
-        return this.userResponse.fromEntity(updatedUser);
+        UserResponse response = this.userResponse.fromEntity(updatedUser);
+
+        System.out.println("DTO creado correctamente");
+
+        return response;
     }
 
     /*public UserResponse changeRole(UUID id, ChangeRoleRequest request) {
