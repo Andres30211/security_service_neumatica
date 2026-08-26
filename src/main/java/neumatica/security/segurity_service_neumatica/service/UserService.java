@@ -88,45 +88,8 @@ public class UserService {
     // =========================================
     // CAMBIAR ROL
     // =========================================
-    
+
     public UserResponse changeRole(UUID id, ChangeRoleRequest request) {
-
-        System.out.println("========== CHANGE ROLE ==========");
-        System.out.println("ID: " + id);
-        System.out.println("ROLE: " + request.role());
-
-        User user = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Usuario no encontrado: " + id)
-                );
-
-        System.out.println("Usuario encontrado: " + user.getEmail());
-
-        Role role = roleRepository.findByName(request.role())
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Rol no encontrado: " + request.role()
-                        )
-                );
-
-        System.out.println("Rol encontrado: " + role.getName());
-
-        user.setRoles(Set.of(role));
-
-        System.out.println("Roles asignados al usuario");
-
-        User updatedUser = userRepository.save(user);
-
-        System.out.println("Usuario guardado correctamente");
-
-        UserResponse response = this.userResponse.fromEntity(updatedUser);
-
-        System.out.println("DTO creado correctamente");
-
-        return response;
-    }
-
-    /*public UserResponse changeRole(UUID id, ChangeRoleRequest request) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
@@ -138,12 +101,13 @@ public class UserService {
                         new RuntimeException("Rol no encontrado")
                 );
 
-        user.setRoles(Set.of(role));
+        user.getRoles().clear();
+        user.getRoles().add(role);
 
         User updatedUser = userRepository.save(user);
 
         return this.userResponse.fromEntity(updatedUser);
-    }*/
+    }
 
 
     // =========================================
