@@ -44,10 +44,10 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
             		
-            		.requestMatchers(
+            		/*.requestMatchers(
                             org.springframework.http.HttpMethod.OPTIONS,
                             "/**"
-                    ).permitAll()
+                    ).permitAll()*/
 
                     .requestMatchers(
                             "/api/auth/register",
