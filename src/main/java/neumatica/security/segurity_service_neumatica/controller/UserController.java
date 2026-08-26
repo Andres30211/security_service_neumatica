@@ -83,7 +83,7 @@ public class UserController {
     @PatchMapping("/{id}/role")
     public ResponseEntity<UserResponse> changeRole(
             @PathVariable UUID id,
-            @Valid @RequestBody ChangeRoleRequest request
+            /*@Valid*/ @RequestBody ChangeRoleRequest request
     ) {
 
         return ResponseEntity.ok(
