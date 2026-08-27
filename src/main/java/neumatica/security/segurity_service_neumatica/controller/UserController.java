@@ -3,7 +3,6 @@ package neumatica.security.segurity_service_neumatica.controller;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +39,7 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> getAllUsers() {
 
         return ResponseEntity.ok(
-                userService.getAllUsers()
+        		this.userService.getAllUsers()
         );
     }
 
@@ -50,12 +49,10 @@ public class UserController {
     // =========================================
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUser(
-            @PathVariable UUID id
-    ) {
+    public ResponseEntity<UserResponse> getUser(@PathVariable UUID id) {
 
         return ResponseEntity.ok(
-                userService.getUserById(id)
+        		this.userService.getUserById(id)
         );
     }
 
@@ -65,13 +62,11 @@ public class UserController {
     // =========================================
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(
-            @PathVariable UUID id,
-            @Valid @RequestBody UpdateUserRequest request
-    ) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id,
+            @Valid @RequestBody UpdateUserRequest request) {
 
         return ResponseEntity.ok(
-                userService.updateUser(id, request)
+        		this.userService.updateUser(id, request)
         );
     }
 
@@ -81,13 +76,11 @@ public class UserController {
     // =========================================
 
     @PatchMapping("/{id}/role")
-    public ResponseEntity<UserResponse> changeRole(
-            @PathVariable UUID id,
-            @Valid @RequestBody ChangeRoleRequest request
-    ) {
+    public ResponseEntity<UserResponse> changeRole(@PathVariable UUID id,
+    		@Valid @RequestBody ChangeRoleRequest request) {
 
         return ResponseEntity.ok(
-                userService.changeRole(id, request)
+        		this.userService.changeRole(id, request)
         );
     }
 
@@ -97,11 +90,9 @@ public class UserController {
     // =========================================
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(
-            @PathVariable UUID id
-    ) {
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
 
-        userService.deleteUser(id);
+        this.userService.deleteUser(id);
 
         return ResponseEntity.noContent().build();
     }

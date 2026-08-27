@@ -14,6 +14,7 @@ import neumatica.security.segurity_service_neumatica.dto.UpdateUserRequest;
 import neumatica.security.segurity_service_neumatica.dto.UserResponse;
 import neumatica.security.segurity_service_neumatica.entity.Role;
 import neumatica.security.segurity_service_neumatica.entity.User;
+import neumatica.security.segurity_service_neumatica.repository.RefreshTokenRepository;
 import neumatica.security.segurity_service_neumatica.repository.RoleRepository;
 import neumatica.security.segurity_service_neumatica.repository.UserRepository;
 
@@ -27,6 +28,9 @@ public class UserService {
 	
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private RefreshTokenRepository refreshTokenRepository;
 	
 	private UserResponse userResponse;
 	
@@ -114,30 +118,16 @@ public class UserService {
     // ELIMINAR
     // =========================================
 
-    public void deleteUser(UUID id) {
+    @Transactional
+    public void deleteUser(UUID userId) {
 
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException(
-                    "Usuario no encontrado"
-            );
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        userRepository.deleteById(id);
+        this.refreshTokenRepository.deleteByUser(user);
+
+        this.userRepository.delete(user);
     }
 
-
-    // =========================================
-    // MAPPER
-    // =========================================
-
-    /*private UserResponse toDTO(User user) {
-
-        return new UserResponse(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                null
-        );
-    }*/
 
 }
