@@ -1,14 +1,13 @@
 package neumatica.security.segurity_service_neumatica.service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
 import neumatica.security.segurity_service_neumatica.dto.ChangeRoleRequest;
 import neumatica.security.segurity_service_neumatica.dto.UpdateUserRequest;
 import neumatica.security.segurity_service_neumatica.dto.UserResponse;
@@ -18,28 +17,27 @@ import neumatica.security.segurity_service_neumatica.repository.RefreshTokenRepo
 import neumatica.security.segurity_service_neumatica.repository.RoleRepository;
 import neumatica.security.segurity_service_neumatica.repository.UserRepository;
 
+
+/**
+ * Servicio encargado de gestionar los usuarios.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
 
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-	private RoleRepository roleRepository;
-	
-	@Autowired
-	private RefreshTokenRepository refreshTokenRepository;
-	
-	private UserResponse userResponse;
-	
-	
-	// =========================================
-    // LISTAR
+
+    private final UserRepository userRepository;
+
+    private final RoleRepository roleRepository;
+
+    private final RefreshTokenRepository refreshTokenRepository;
+
+
+    // =========================================
+    // LISTAR USUARIOS
     // =========================================
 
-    //@Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
 
         return userRepository.findAll()
@@ -50,10 +48,22 @@ public class UserService {
 
 
     // =========================================
-    // OBTENER POR ID
+    // OBTENER USUARIO POR ID
     // =========================================
 
-    //@Transactional(readOnly = true)
+    /**
+     * Este método es especialmente importante
+     * para el location-service.
+     *
+     * El location-service solamente conoce
+     * el UUID del vendedor.
+     *
+     * Entonces realiza:
+     *
+     * GET /api/users/{id}
+     *
+     * y este método busca el usuario.
+     */
     public UserResponse getUserById(UUID id) {
 
         User user = userRepository.findById(id)
@@ -63,7 +73,7 @@ public class UserService {
                         )
                 );
 
-        return this.userResponse.fromEntity(user);
+        return UserResponse.fromEntity(user);
     }
 
 
@@ -71,7 +81,10 @@ public class UserService {
     // ACTUALIZAR DATOS BÁSICOS
     // =========================================
 
-    public UserResponse updateUser(UUID id, UpdateUserRequest request) {
+    public UserResponse updateUser(
+            UUID id,
+            UpdateUserRequest request
+    ) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
@@ -83,9 +96,12 @@ public class UserService {
         user.setName(request.name());
         user.setEmail(request.email());
 
-        User updatedUser = userRepository.save(user);
+        User updatedUser =
+                userRepository.save(user);
 
-        return this.userResponse.fromEntity(updatedUser);
+        return UserResponse.fromEntity(
+                updatedUser
+        );
     }
 
 
@@ -93,41 +109,54 @@ public class UserService {
     // CAMBIAR ROL
     // =========================================
 
-    public UserResponse changeRole(UUID id, ChangeRoleRequest request) {
+    public UserResponse changeRole(
+            UUID id,
+            ChangeRoleRequest request
+    ) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Usuario no encontrado")
+                        new RuntimeException(
+                                "Usuario no encontrado"
+                        )
                 );
 
-        Role role = roleRepository.findByName(request.role())
+        Role role = roleRepository
+                .findByName(request.role())
                 .orElseThrow(() ->
-                        new RuntimeException("Rol no encontrado")
+                        new RuntimeException(
+                                "Rol no encontrado"
+                        )
                 );
 
         user.getRoles().clear();
+
         user.getRoles().add(role);
 
-        User updatedUser = userRepository.save(user);
+        User updatedUser =
+                userRepository.save(user);
 
-        return this.userResponse.fromEntity(updatedUser);
+        return UserResponse.fromEntity(
+                updatedUser
+        );
     }
 
 
     // =========================================
-    // ELIMINAR
+    // ELIMINAR USUARIO
     // =========================================
 
-    @Transactional
     public void deleteUser(UUID userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Usuario no encontrado"
+                        )
+                );
 
-        this.refreshTokenRepository.deleteByUser(user);
+        refreshTokenRepository.deleteByUser(user);
 
-        this.userRepository.delete(user);
+        userRepository.delete(user);
     }
-
-
 }
