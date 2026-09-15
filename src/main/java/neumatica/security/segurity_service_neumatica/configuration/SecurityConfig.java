@@ -43,24 +43,16 @@ public class SecurityConfig {
             )
 
             .authorizeHttpRequests(auth -> auth
-            		
-            		/*.requestMatchers(
-                            org.springframework.http.HttpMethod.OPTIONS,
-                            "/**"
-                    ).permitAll()*/
 
                     .requestMatchers(
                             "/api/auth/register",
                             "/api/auth/login",
-                            "/api/auth/refresh",
-                            "/api/auth/despertar"
+                            "/api/auth/refresh"
                     ).permitAll()
 
                     .requestMatchers(
-                            "/api/users",
-                            "/api/users/**",
-                            "/api/admin/**"
-                    ).hasAnyRole("ADMIN", "USER")
+                            "/api/users/**"
+                    ).hasAnyRole("ADMIN", "USER", "VENDEDOR", "PUBLICISTA")
 
                     .anyRequest().authenticated()
             )

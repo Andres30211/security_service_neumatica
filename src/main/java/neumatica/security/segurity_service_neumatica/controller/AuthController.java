@@ -24,11 +24,6 @@ public class AuthController {
 
 	@Autowired
 	private AuthService authService;
-	
-	@GetMapping("/despertar")
-    public ResponseEntity<String> despertar() {
-        return ResponseEntity.ok("Servidor disponible...");
-    }
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(
