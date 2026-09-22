@@ -5,13 +5,13 @@ import java.util.UUID;
 
 import neumatica.security.segurity_service_neumatica.entity.User;
 
-
 public record UserResponse(
         UUID id,
         String name,
         String email,
         Set<String> roles,
-        boolean enabled
+        boolean enabled,
+        boolean accountNonLocked
 ) {
 
     public static UserResponse fromEntity(User user) {
@@ -24,7 +24,8 @@ public record UserResponse(
                         .stream()
                         .map(role -> role.getName().name())
                         .collect(java.util.stream.Collectors.toSet()),
-                user.isEnabled()
+                user.isEnabled(),
+                user.isAccountNonLocked()
         );
     }
 }
